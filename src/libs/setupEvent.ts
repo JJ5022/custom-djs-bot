@@ -1,6 +1,5 @@
 import { Client } from 'discord.js';
-import fsPromise from 'fs/promises';
-import { resolveAllFiles } from '../utils';
+import resolveAllFiles from '../utils/resolveAllFiles';
 
 export async function setupEvent(client: Client) {
   const eventFiles = await resolveAllFiles('./build/event');

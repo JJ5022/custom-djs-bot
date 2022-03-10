@@ -15,3 +15,5 @@ export async function resolveAllFiles(folderPath: string): Promise<string[]> {
 
   return files;
 }
+
+export default resolveAllFiles;
