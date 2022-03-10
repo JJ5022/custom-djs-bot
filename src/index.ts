@@ -3,6 +3,7 @@ dotenvConfig();
 
 import { Client, Intents } from 'discord.js';
 import loadLibs from './libs';
+import logger from './utils/logger';
 
 async function main() {
   const intents = [
@@ -30,7 +31,7 @@ async function main() {
 
 main().catch(error => {
   if (error) {
-    console.log(`Application Error: ${error}`);
+    logger.error(`Application Error: ${error}`);
   }
   process.exit(1);
 });

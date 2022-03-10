@@ -1,7 +1,8 @@
 import { Client } from 'discord.js';
+import logger from '../utils/logger';
 
 export async function onReady(client: Client) {
-  console.log('Discord Bot is Ready');
+  logger.info('Discord Bot is Ready');
 }
 
 export const name = 'ready';
