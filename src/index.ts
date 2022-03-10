@@ -2,8 +2,7 @@ import { config as dotenvConfig } from 'dotenv';
 dotenvConfig();
 
 import { Client, Intents } from 'discord.js';
-import fsPromises from 'fs/promises';
-import loadMiddleware from './middleware';
+import loadLibs from './libs';
 
 async function main() {
   const intents = [
@@ -26,7 +25,7 @@ async function main() {
   const client = new Client({ intents });
   client.login(process.env.DISCORD_TOKEN);
 
-  loadMiddleware(client);
+  loadLibs(client);
 }
 
 main().catch(error => {
