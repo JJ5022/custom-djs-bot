@@ -2,9 +2,10 @@ import { config as dotenvConfig } from 'dotenv';
 dotenvConfig();
 
 import { Client, Intents } from 'discord.js';
-import loadLibs from './libs';
 import logger from './utils/logger';
-import loadModels from './models';
+import loadDb from './libs/loadDb';
+import setupEvent from './libs/setupEvent';
+import setupErrorHandler from './libs/setupErrorHandler';
 
 async function main() {
   const intents = [
@@ -24,12 +25,11 @@ async function main() {
     Intents.FLAGS.DIRECT_MESSAGE_TYPING,
   ];
 
-  loadModels();
-
   const client = new Client({ intents });
-  client.login(process.env.DISCORD_TOKEN);
 
-  loadLibs(client);
+  await Promise.all([loadDb(), setupErrorHandler(client), setupEvent(client)]);
+
+  client.login(process.env.DISCORD_TOKEN);
 }
 
 main().catch(error => {

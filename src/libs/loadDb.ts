@@ -2,8 +2,8 @@ import path from 'path';
 import getJsFiles from '../utils/getFiles';
 import logger from '../utils/logger';
 
-export async function loadModels(): Promise<any> {
-  const files = await getJsFiles(__dirname);
+export async function loadDb(): Promise<any> {
+  const files = await getJsFiles('./build/models');
   for (const file of files) {
     const model = await import(`./${file}`);
     if (model.default && model.default.load) {
@@ -14,4 +14,4 @@ export async function loadModels(): Promise<any> {
   }
 }
 
-export default loadModels;
+export default loadDb;

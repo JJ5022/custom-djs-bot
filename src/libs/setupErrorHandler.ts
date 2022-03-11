@@ -6,7 +6,7 @@ function shutdown(code: number, client: Client) {
   process.exit(code);
 }
 
-export async function errorHandler(client: Client) {
+export async function setupErrorHandler(client: Client) {
   process.on('uncaughtException', (err, origin) => {
     logger.error(`Uncaught Exception`, err, origin);
     shutdown(1, client);
@@ -23,4 +23,4 @@ export async function errorHandler(client: Client) {
   });
 }
 
-export default errorHandler;
+export default setupErrorHandler;
