@@ -5,7 +5,8 @@ import logger from '../utils/logger';
 export async function loadDb(): Promise<any> {
   const files = await getJsFiles('./build/models');
   for (const file of files) {
-    const model = await import(`./${file}`);
+    logger.verbose(`Loading model: ${file}`);
+    const model = await import(`../models/${file}`);
     if (model.default && model.default.load) {
       model.default.load();
     } else {
