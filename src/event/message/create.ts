@@ -1,15 +1,22 @@
 import { ClientEvents, Message } from 'discord.js';
+import GuildConfig from '../../models/guildConfig';
 
 export async function onMessageCreate(message: Message) {
   if (message.author.bot) return;
-  if (message.content.startsWith('!')) {
-    const args = message.content.slice(1).split(/ +/);
-    const commandName = args.shift()!.toLowerCase();
+  const { guildId } = message;
+  if (!guildId) return;
+  const config = GuildConfig.getConfig(guildId);
+  if (!config) return;
+  if (message.content.startsWith(config.getPrefix())) {
+    const [command, ...args] = message.content
+      .slice(config.getPrefix().length)
+      .toLowerCase()
+      .split(' ');
 
-    if (commandName == 'ping') {
-      message.reply({
-        content: 'Pong!',
-      });
+    if (command == 'ping') {
+      message.reply('Pong!');
+    } else if (command == 'react') {
+      message.react('👌');
     }
   }
 }
