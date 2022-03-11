@@ -2,32 +2,40 @@ import fsPromises from 'fs/promises';
 import logger from '../utils/logger';
 
 export class GuildConfig {
+  private static loadPromise: Promise<undefined>;
   private static configs: GuildConfig[];
   private guildId: string;
   private prefix: string;
   private featureId: string[];
 
-  public static async load() {
+  public static load(): Promise<undefined> {
     if (!GuildConfig.configs) {
-      try {
-        const json = await fsPromises.readFile('./db/guildConfig.json', 'utf8');
-        GuildConfig.configs = JSON.parse(json);
-      } catch {
-        logger.warn("Couldn't load db: guildConfig");
-        GuildConfig.configs = [];
-        this.save();
-      }
-    }
+      GuildConfig.configs = [];
+      return (GuildConfig.loadPromise = fsPromises
+        .readFile('./db/guildConfig.json', 'utf8')
+        .then(json => {
+          GuildConfig.configs = JSON.parse(json);
+          return undefined;
+        }));
+    } else return GuildConfig.loadPromise;
   }
 
-  private static async save() {
+  public static async save() {
     await fsPromises.writeFile(
       './db/guildConfig.json',
       JSON.stringify(GuildConfig.configs)
     );
   }
 
-  private static async insertConfig(
+  public static getConfig(guildId: string): GuildConfig | undefined {
+    return GuildConfig.configs.find(config => config.getGuildId() === guildId);
+  }
+
+  public static getGuildIds(): string[] {
+    return GuildConfig.configs.map(config => config.getGuildId());
+  }
+
+  public static async insertConfig(
     guildId: string,
     prefix: string
   ): Promise<GuildConfig> {
@@ -46,7 +54,7 @@ export class GuildConfig {
     }
   }
 
-  private static async removeConfig(guildId: string) {
+  public static async removeConfig(guildId: string) {
     if (!GuildConfig.configs) GuildConfig.load();
     const index = GuildConfig.configs.findIndex(
       config => config.getGuildId() === guildId
