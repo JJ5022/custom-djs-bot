@@ -92,10 +92,12 @@ export class GuildConfig {
 
   public setPrefix(prefix: string): void {
     this.prefix = prefix;
+    GuildConfig.save();
   }
 
   public setFeatureId(featureId: string[]): void {
     this.featureId = featureId;
+    GuildConfig.save();
   }
 
   public isFeatureEnabled(featureId: string): boolean {
