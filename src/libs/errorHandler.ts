@@ -8,12 +8,12 @@ function shutdown(code: number, client: Client) {
 
 export async function errorHandler(client: Client) {
   process.on('uncaughtException', (err, origin) => {
-    logger.error(`Uncaught Exception: ${err}`);
+    logger.error(`Uncaught Exception`, err, origin);
     shutdown(1, client);
   });
 
   process.on('unhandledRejection', (reason, promise) => {
-    logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    logger.error('Unhandled Rejection reason:', reason, promise);
     shutdown(1, client);
   });
 
