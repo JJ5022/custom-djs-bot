@@ -14,7 +14,10 @@ export class GuildConfig {
       return (GuildConfig.loadPromise = fsPromises
         .readFile('./db/guildConfig.json', 'utf8')
         .then(json => {
-          GuildConfig.configs = JSON.parse(json);
+          GuildConfig.configs = JSON.parse(json).map(
+            ({ guildId, prefix, featureId }: GuildConfig) =>
+              new GuildConfig(guildId, prefix, featureId)
+          );
           return undefined;
         }));
     } else return GuildConfig.loadPromise;
@@ -65,10 +68,14 @@ export class GuildConfig {
     }
   }
 
-  private constructor(guildId: string, prefix: string) {
+  private constructor(
+    guildId: string,
+    prefix: string,
+    featureId: string[] = []
+  ) {
     this.guildId = guildId;
     this.prefix = prefix;
-    this.featureId = [];
+    this.featureId = featureId;
   }
 
   public getGuildId(): string {
