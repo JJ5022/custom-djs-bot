@@ -14,7 +14,7 @@ export async function errorHandler(client: Client) {
 
   process.on('unhandledRejection', (reason, promise) => {
     logger.error('Unhandled Rejection reason:', reason, promise);
-    shutdown(1, client);
+    throw 'Unhandled Rejection';
   });
 
   process.on('SIGINT', () => {
