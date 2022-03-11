@@ -6,6 +6,7 @@ import logger from './utils/logger';
 import loadDb from './libs/loadDb';
 import setupEvent from './libs/setupEvent';
 import setupErrorHandler from './libs/setupErrorHandler';
+import loadCommands from './libs/commandHandler';
 
 async function main() {
   const intents = [
@@ -27,7 +28,12 @@ async function main() {
 
   const client = new Client({ intents });
 
-  await Promise.all([loadDb(), setupErrorHandler(client), setupEvent(client)]);
+  await Promise.all([
+    loadDb(),
+    setupErrorHandler(client),
+    setupEvent(client),
+    loadCommands(client),
+  ]);
 
   client.login(process.env.DISCORD_TOKEN);
 }
