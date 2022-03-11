@@ -9,6 +9,8 @@ export async function onMessageCreate(message: Message) {
   const config = GuildConfig.getConfig(guildId);
   if (!config) return;
   if (excuteCommand(config, message)) return;
+  if (message.client.user && message.mentions.has(message.client.user))
+    message.reply(`My prefix is \`${config.getPrefix()}\``);
 }
 
 export const name: keyof ClientEvents = 'messageCreate';
