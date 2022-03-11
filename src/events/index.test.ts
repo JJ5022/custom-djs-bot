@@ -5,7 +5,7 @@ const allEventName = ["apiRequest","apiResponse","applicationCommandCreate","app
 
 describe('Testing event', () => {
   it('should be able to import event', async () => {
-    const eventFiles = await resolveAllFiles('./build/event');
+    const eventFiles = await resolveAllFiles('./build/events');
     for (const eventFile of eventFiles) {
       if (
         eventFile.endsWith('.js') &&
