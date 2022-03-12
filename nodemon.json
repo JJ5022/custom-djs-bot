@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
+  "verbose": true,
+  "delay": 3000,
+  "ext": "ts",
+  "exec": "npm run restart",
+  "signal": "SIGINT",
+  "watch": [
+    "src"
+  ]
+}

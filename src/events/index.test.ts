@@ -7,11 +7,7 @@ describe('Testing event', () => {
   it('should be able to import event', async () => {
     const eventFiles = await resolveAllFiles('./build/events');
     for (const eventFile of eventFiles) {
-      if (
-        eventFile.endsWith('.js') &&
-        !eventFile.endsWith('test.js') &&
-        !eventFile.startsWith('index')
-      ) {
+      if (eventFile.endsWith('.js') && !eventFile.startsWith('index')) {
         const event = await import(`..\\${eventFile}`);
         expect(event.name).toBeDefined();
         expect(event.default).toBeDefined();

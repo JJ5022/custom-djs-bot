@@ -7,8 +7,10 @@
     "build": "tsc",
     "test": "jest",
     "start": "node .",
-    "dev": "tsc -w",
-    "rebuild": "rm -rf build && npm run build"
+    "build-w": "tsc -w",
+    "rebuild": "rm -rf build && npm run build",
+    "restart": "npm run build && npm run test && npm run start",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
