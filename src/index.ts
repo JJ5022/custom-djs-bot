@@ -26,7 +26,7 @@ async function main() {
     Intents.FLAGS.DIRECT_MESSAGE_TYPING,
   ];
 
-  const client = new Client({ intents });
+  const client = new Client({ intents, partials: ['CHANNEL'] });
 
   await Promise.all([
     loadDb(),

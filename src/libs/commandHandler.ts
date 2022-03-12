@@ -25,20 +25,29 @@ export async function loadCommands(c: Client) {
   }
 }
 
-export function excuteCommand(config: GuildConfig, message: Message) {
-  logger.verbose(`Received message: ${message.content}`);
+export function excuteCommand(
+  config: false | undefined | GuildConfig,
+  message: Message
+) {
+  const prefix = (config && config.getPrefix()) || '';
 
-  if (message.content.startsWith(config.getPrefix())) {
+  if (message.content.startsWith(prefix) || message.inGuild()) {
     const [command, ...args] = message.content
-      .slice(config.getPrefix().length)
+      .slice(prefix.length)
       .toLowerCase()
       .split(' ');
 
     const commandFunc = commands.get(command);
+
     if (commandFunc) {
-      logger.verbose(`Execute command: ${command}`);
-      commandFunc.excute(args, message, client);
-      return true;
+      if (commandFunc.guildOnly && !message.inGuild()) {
+        message.channel.send('This command can only be used in a server');
+        return true;
+      } else {
+        logger.verbose(`Execute command: ${command}`);
+        commandFunc.excute(args, message, client);
+        return true;
+      }
     }
   }
   return false;
