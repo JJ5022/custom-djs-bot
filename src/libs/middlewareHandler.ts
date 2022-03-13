@@ -1,8 +1,13 @@
 import { Client, ClientEvents, Collection } from 'discord.js';
 import logger from '../utils/logger';
 import path from 'path';
+import getModules from '../utils/getModules';
+import { djsEvent, isDjsEvent } from '../utils/djsEvent';
 
-const middlewares = new Collection<keyof ClientEvents, any>();
+const eventCallbacks = new Collection<
+  keyof ClientEvents,
+  Collection<string, Function>
+>();
 
 export async function loadMiddlewares(client: Client) {}
 
