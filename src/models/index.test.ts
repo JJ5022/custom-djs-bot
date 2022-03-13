@@ -2,7 +2,7 @@ import path from 'path';
 import getModules from '../utils/getModules';
 
 it('should be able to load all models', async () => {
-  const modules = getModules(__dirname, path.join('.', 'build', 'events'));
+  const modules = getModules(__dirname, path.join('.', 'build', 'models'));
   for await (const module of modules) {
     const model = await import(`${module}`);
     expect(model.default).toBeDefined();
