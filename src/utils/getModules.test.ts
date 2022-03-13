@@ -1,5 +1,6 @@
 import fsPromises from 'fs/promises';
 import path from 'path';
+import getModules from './getModules';
 
 describe(`Get Modules `, () => {
   it(`should return relative path from absolute path`, () => {
@@ -42,10 +43,7 @@ describe(`Get Modules `, () => {
       path.resolve('.', 'test', 'utils', 'nestedJsFile')
     );
 
-    console.log(files);
-    console.log(__filename);
     files = files.map(file => path.relative(__dirname, file));
-    console.log(files);
 
     expect(files).toContain(
       path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test.js')
@@ -64,6 +62,26 @@ describe(`Get Modules `, () => {
         'inner',
         'test.js'
       )
+    );
+  });
+
+  it('should be able to locate all nested file with getModules', async () => {
+    const files = await getModules(
+      __dirname,
+      path.resolve('.', 'test', 'utils', 'nestedJsFile')
+    );
+
+    //prettier-ignore
+    expect((await files.next()).value).toBe(
+      path.join('..','..','test','utils','nestedJsFile','inner','inner','test.js')
+    );
+
+    expect((await files.next()).value).toBe(
+      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'inner', 'test.js')
+    );
+
+    expect((await files.next()).value).toBe(
+      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test.js')
     );
   });
 });
