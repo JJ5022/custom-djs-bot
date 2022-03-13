@@ -1,17 +1,22 @@
 import { Client } from 'discord.js';
 import logger from '../utils/logger';
-import resolveAllJsFiles from '../utils/resolveAllFiles';
+import path from 'path';
+import getModules from '../utils/getModules';
 
 export async function setupEvent(client: Client) {
-  const eventFiles = await resolveAllJsFiles('./build/events');
-  for (const eventFile of eventFiles) {
-    logger.verbose(`Setting event: ${eventFile}`);
-    const event = await import(`..\\..\\${eventFile}`);
+  const modules = getModules(__dirname, path.join('.', 'build', 'events'));
+  for await (const module of modules) {
+    const rootPath = path.relative(
+      path.resolve('.'),
+      path.join(__dirname, module)
+    );
+    const event = await import(`${module}`);
 
-    if (event.name !== undefined && event.default !== undefined) {
+    if (typeof event.name === 'string' && typeof event.default === 'function') {
       client.on(event.name, event.default);
+      logger.verbose(`Loaded event: ${event.name} from "${rootPath}"`);
     } else {
-      logger.warn(`Fail to import event from ${eventFile}`);
+      logger.warn(`Fail to import event from "${rootPath}"`);
     }
   }
 }

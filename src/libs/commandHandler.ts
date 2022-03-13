@@ -1,8 +1,8 @@
 import { Collection, Message, Client } from 'discord.js';
-import resolveAllJsFiles from '../utils/resolveAllFiles';
 import path from 'path';
 import logger from '../utils/logger';
 import GuildConfig from '../models/guildConfig';
+import getModules from '../utils/getModules';
 
 const commands = new Collection<string, any>();
 let client: Client;
@@ -10,17 +10,21 @@ let client: Client;
 export async function loadCommands(c: Client) {
   client = c;
 
-  const files = await resolveAllJsFiles(path.join(__dirname, '..', 'commands'));
-  for (const file of files) {
-    logger.verbose(`Loading command: ${file}`);
-    const command = await import(file);
+  const modules = getModules(__dirname, path.join('.', 'build', 'commands'));
+  for await (const module of modules) {
+    const rootPath = path.relative(
+      path.resolve('.'),
+      path.join(__dirname, module)
+    );
+    const command = await import(module);
     if (
       typeof command.name === 'string' &&
       typeof command.excute === 'function'
     ) {
       commands.set(command.name, command);
+      logger.verbose(`Loaded command: ${command.name} from "${rootPath}"`);
     } else {
-      logger.warn(`Command ${file} is not loaded`);
+      logger.warn(`Fail to import command from "${rootPath}"`);
     }
   }
 }

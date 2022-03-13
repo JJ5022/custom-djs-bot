@@ -1,6 +1,7 @@
 import fsPromise from 'fs/promises';
 import path from 'path';
 
+/** @deprecated use getModules */
 export async function resolveAllJsFiles(folderPath: string): Promise<string[]> {
   const filenames = await fsPromise.readdir(folderPath);
   const files: string[] = [];
