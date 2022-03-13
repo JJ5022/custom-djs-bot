@@ -29,12 +29,12 @@ describe(`Get Modules `, () => {
       path.resolve('.', 'test', 'utils', 'nestedJsFile')
     );
 
-    expect(files).toContain(path.resolve('test/utils/nestedJsFile/test.js'));
+    expect(files).toContain(path.resolve('test/utils/nestedJsFile/test3.js'));
     expect(files).toContain(
-      path.resolve('test/utils/nestedJsFile/inner/test.js')
+      path.resolve('test/utils/nestedJsFile/inner/test2.js')
     );
     expect(files).toContain(
-      path.resolve('test/utils/nestedJsFile/inner/inner/test.js')
+      path.resolve('test/utils/nestedJsFile/inner/inner/test1.js')
     );
   });
 
@@ -46,10 +46,18 @@ describe(`Get Modules `, () => {
     files = files.map(file => path.relative(__dirname, file));
 
     expect(files).toContain(
-      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test.js')
+      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test3.js')
     );
     expect(files).toContain(
-      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'inner', 'test.js')
+      path.join(
+        '..',
+        '..',
+        'test',
+        'utils',
+        'nestedJsFile',
+        'inner',
+        'test2.js'
+      )
     );
     expect(files).toContain(
       path.join(
@@ -60,7 +68,7 @@ describe(`Get Modules `, () => {
         'nestedJsFile',
         'inner',
         'inner',
-        'test.js'
+        'test1.js'
       )
     );
   });
@@ -73,15 +81,23 @@ describe(`Get Modules `, () => {
 
     //prettier-ignore
     expect((await files.next()).value).toBe(
-      path.join('..','..','test','utils','nestedJsFile','inner','inner','test.js')
+      path.join('..','..','test','utils','nestedJsFile','inner','inner','test1.js')
     );
 
     expect((await files.next()).value).toBe(
-      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'inner', 'test.js')
+      path.join(
+        '..',
+        '..',
+        'test',
+        'utils',
+        'nestedJsFile',
+        'inner',
+        'test2.js'
+      )
     );
 
     expect((await files.next()).value).toBe(
-      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test.js')
+      path.join('..', '..', 'test', 'utils', 'nestedJsFile', 'test3.js')
     );
   });
 });
