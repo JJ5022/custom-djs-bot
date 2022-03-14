@@ -7,6 +7,7 @@ import loadDb from './libs/loadDb';
 import setupEvent from './libs/setupEvent';
 import setupErrorHandler from './libs/setupErrorHandler';
 import loadCommands from './libs/commandHandler';
+import loadMiddlewares from './libs/middlewareHandler';
 
 async function main() {
   const intents = [
@@ -33,6 +34,7 @@ async function main() {
     setupErrorHandler(client),
     setupEvent(client),
     loadCommands(client),
+    loadMiddlewares(client),
   ]);
 
   client.login(process.env.DISCORD_TOKEN);
