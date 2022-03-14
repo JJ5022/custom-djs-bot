@@ -4,7 +4,7 @@ import GuildConfig from '../../models/guildConfig';
 import logger from '../../utils/logger';
 
 export async function onMessageCreate(message: Message) {
-  logger.silly(`Received message: ${message.content}`);
+  if (message.content) logger.silly(`Received message: ${message.content}`);
   if (message.author.bot) {
     logger.silly('Message is from bot');
     return;
