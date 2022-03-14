@@ -13,6 +13,8 @@ export async function loadMiddlewares(client: Client) {
   const modules = getModules(__dirname, path.join('.', 'build', 'middlewares'));
   let middlewareCount = 0;
 
+  logger.profile('Loading middlewares');
+
   for await (const module of modules) {
     const rootPath = path.relative(
       path.resolve('.'),
@@ -23,7 +25,7 @@ export async function loadMiddlewares(client: Client) {
     const excuteOrder = middleware.order || `unordered-${middlewareCount++}`;
     const loadableEvent: string[] = [];
 
-    //Loop through all events
+    /* //Loop through all events
     for (const event of djsEvent) {
       if (typeof middleware[event] === 'function') {
         if (!eventCallbacks.has(event)) {
@@ -31,6 +33,18 @@ export async function loadMiddlewares(client: Client) {
         }
         eventCallbacks.get(event)?.set(excuteOrder, middleware[event]);
         loadableEvent.push(event);
+      }
+    } 
+    */
+
+    //Loop through all exports
+    for (const ex in middleware) {
+      if (isDjsEvent(ex)) {
+        if (!eventCallbacks.has(ex)) {
+          eventCallbacks.set(ex, new Collection());
+        }
+        eventCallbacks.get(ex)?.set(excuteOrder, middleware[ex]);
+        loadableEvent.push(ex);
       }
     }
 
@@ -48,6 +62,11 @@ export async function loadMiddlewares(client: Client) {
       const [aOrder, bOrder] = [aKey, bKey].map(parseInt);
       return isNaN(aOrder) ? 1 : isNaN(bOrder) ? -1 : aOrder - bOrder;
     });
+  });
+
+  logger.profile('Loading middlewares', {
+    level: 'verbose',
+    message: `Loading middlewares`,
   });
 }
 
