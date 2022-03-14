@@ -38,13 +38,13 @@ export async function loadMiddlewares(client: Client) {
     */
 
     //Loop through all exports
-    for (const ex in middleware) {
-      if (isDjsEvent(ex)) {
-        if (!eventCallbacks.has(ex)) {
-          eventCallbacks.set(ex, new Collection());
+    for (const event in middleware) {
+      if (isDjsEvent(event)) {
+        if (!eventCallbacks.has(event)) {
+          eventCallbacks.set(event, new Collection());
         }
-        eventCallbacks.get(ex)?.set(excuteOrder, middleware[ex]);
-        loadableEvent.push(ex);
+        eventCallbacks.get(event)?.set(excuteOrder, middleware[event]);
+        loadableEvent.push(event);
       }
     }
 
@@ -59,8 +59,11 @@ export async function loadMiddlewares(client: Client) {
 
   eventCallbacks.forEach((callbacks, _event) => {
     callbacks.sort((_a, _b, aKey, bKey) => {
-      const [aOrder, bOrder] = [aKey, bKey].map(parseInt);
-      return isNaN(aOrder) ? 1 : isNaN(bOrder) ? -1 : aOrder - bOrder;
+      return typeof aKey !== 'number'
+        ? 1
+        : typeof bKey !== 'number'
+        ? -1
+        : aKey - bKey;
     });
   });
 
