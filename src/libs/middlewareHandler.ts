@@ -92,11 +92,13 @@ export async function loadMiddlewares(client: Client) {
     level: 'verbose',
     message: `Loading middlewares`,
   });
-}
 
-export function excuteMiddleware<
-  E extends keyof ClientEvents,
-  A extends ClientEvents[E]
->(event: E, ...args: A) {}
+  for (const event of eventCallbacks.keys()) {
+    client.on(event, (...args) => {
+      const callbacks = eventCallbacks.get(event) as Array<MiddlewareHandler>;
+      callbacks.forEach(({ handler }) => handler(client, ...args));
+    });
+  }
+}
 
 export default loadMiddlewares;
